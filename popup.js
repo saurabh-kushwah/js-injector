@@ -1,41 +1,45 @@
-// Storage Documentation: https://developer.chrome.com/extensions/storage
-document.addEventListener('DOMContentLoaded', function() {
-  var textarea = document.getElementById('jscode');
+document.addEventListener('DOMContentLoaded', function () {
+  var jsTextArea = document.getElementById('jscode');
   var injectButton = document.getElementById('inject');
+  var pathPatternInput = document.getElementById('path-pattern');
 
-  chrome.tabs.query({active: true},function(tab) {
-    var url = tab[0].url;
+  document.getElementById('clear-storage').addEventListener('onclick', function () {
+    chrome.storage.sync.clear();
+  });
 
-    chrome.storage.sync.get(url, function(theValue) {
-      if (theValue[url] != undefined) {
-        textarea.value = theValue[url];
+  chrome.tabs.query({ active: true }, function (curTab) {
+    var tab = new URL(curTab[0].url);
+
+    chrome.storage.sync.get(tab.host, function (data) {
+      if (data[tab.host] != undefined) {
+        jsTextArea.value = data[tab.host]['jsText'];
+        pathPatternInput.value = data[tab.host]['pathPattern'];
       } else {
-        textarea.value = '';
+        jsTextArea.value = '';
+        pathPatternInput.value = tab.pathname;
       }
     });
 
-    injectButton.addEventListener('click', function() {
-      var theValue = textarea.value;
-      if (!theValue) {
-        chrome.storage.sync.remove(url, function() {
-          // Notify that we saved.
-          console.log('REMOVED script for ' + url);
-        });
+    injectButton.addEventListener('click', function () {
+      var jsText = jsTextArea.value;
+      if (!jsText) {
+        chrome.storage.sync.remove(tab.host, () => { });
         window.close();
         return;
       }
 
       chrome.tabs.executeScript({
-        code: theValue
+        code: jsText,
       });
 
-      // Save it using the Chrome extension storage API.
-      var keypair = {};
-      keypair[url] = theValue;
-      chrome.storage.sync.set(keypair, function() {
-        // Notify that we saved.
-        console.log('SAVED ' + JSON.stringify(keypair));
-      });
+      var tabData = {
+        [tab.host]: {
+          jsText: jsText,
+          pathPattern: pathPatternInput.value,
+        },
+      };
+
+      chrome.storage.sync.set(tabData, () => { });
       window.close();
     });
   });

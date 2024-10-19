@@ -1,11 +1,12 @@
-chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (changeInfo.status == 'complete') {
-    chrome.tabs.get(tabId, function(tab) {
-      chrome.storage.sync.get(null, function(theValue) {
-        if (theValue[tab.url] != undefined) {
-          chrome.tabs.executeScript(tabId, {code: theValue[tab.url]});
-        }
-      });
+    chrome.storage.sync.get(null, function (data) {
+      var url = new URL(tab.url);
+      var tabData = data[url.host];
+
+      if (tabData != undefined && new RegExp(tabData['pathPattern']).test(url.pathname)) {
+        chrome.tabs.executeScript(tabId, { code: tabData['jsText'] });
+      }
     });
   }
-})
+});

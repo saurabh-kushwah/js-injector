@@ -6,25 +6,26 @@
   "description": "Inject javascript to the webpage you are visiting",
   "version": "1.2",
   "browser_action": {
-  "default_icon":
-    {
+    "default_icon": {
       "16": "images/icon16.png",
       "24": "images/icon24.png",
       "32": "images/icon32.png",
       "128": "images/icon128.png"
     },
-   "default_title": "Javascript Injector",
-   "default_popup": "popup.html"
+    "default_title": "Javascript Injector",
+    "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
   "permissions": [
-   "activeTab",
-   "storage",
-   "tabs",
-   "activeTab",
-   "http://*/",
-   "https://*/"
-   ]
+    "activeTab",
+    "storage",
+    "tabs",
+    "activeTab",
+    "http://*/",
+    "https://*/"
+  ]
 }
