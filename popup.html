@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Javascript Injector</title>
+    <script src="popup.js"></script>
+  </head>
+  <body
+    style="
+      border: 1px solid lightgrey;
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      color: #333;
+      padding: 10px;
+    "
+  >
+    <div class="container container-fluid">
+      <div class="row">
+        <textarea
+          id="jscode"
+          cols="80"
+          rows="10"
+          placeholder="Please paste your JavaScript here, then click on Update."
+          style="
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 1px solid #ccc; /* Added border */
+            padding: 5px; /* Added padding */
+            resize: vertical; /* Allowing vertical resizing */
+          "
+          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+        ></textarea>
+      </div>
+      <div class="row">
+        <textarea
+          id="path-pattern"
+          cols="80"
+          rows="1"
+          placeholder="URL path pattern"
+          style="
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 1px solid #ccc; /* Added border */
+            padding: 5px; /* Added padding */
+            resize: none; /* Disabling resizing */
+          "
+          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+        ></textarea>
+      </div>
+      <div class="row">
+        <button
+          id="inject"
+          class="btn btn-default"
+          style="background-color: #333; color: #fff; padding: 10px 20px; border: none; cursor: pointer"
+        >
+          Update
+        </button>
+        <button
+          id="clear-storage"
+          class="btn btn-default"
+          style="background-color: #333; color: #fff; padding: 10px 20px; border: none; cursor: pointer"
+        >
+          Clear Extension Storage
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
