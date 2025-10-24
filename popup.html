@@ -46,13 +46,44 @@
           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         ></textarea>
       </div>
+      <div
+        class="row"
+        id="existing-patterns"
+        style="
+          overflow: hidden;
+          margin-bottom: 10px;
+        "
+      >
+        <label for="existing-patterns" style="font-weight: bold; margin-bottom: 5px; display: block;">
+          Existing Path Patterns:
+        </label>
+        <select
+          id="existing-patterns-select"
+          style="
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            color: #333;
+          "
+        >
+          <option value="default-intl-option" selected>Select a pattern to update/delete</option>
+        </select>
+      </div>
       <div class="row">
         <button
           id="inject"
           class="btn btn-default"
           style="background-color: #333; color: #fff; padding: 10px 20px; border: none; cursor: pointer"
         >
-          Update
+          Inject
+        </button>
+        <button
+          id="delete-pattern"
+          class="btn btn-default"
+          style="background-color: #333; color: #fff; padding: 10px 20px; border: none; cursor: pointer"
+        >
+          Delete
         </button>
         <button
           id="clear-storage"

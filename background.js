@@ -1,7 +1,7 @@
-function executeScript(tabID, jsText) {
+async function executeScript(tabID, jsText) {
   var jsText = `
     async function setTimeoutFunc() {
-      for (let i = 0; i < 25; i++) {
+      for (let i = 0; i < 5; i++) {
         try {
           ${jsText}
         } catch (error) {
@@ -14,18 +14,22 @@ function executeScript(tabID, jsText) {
     setTimeout(setTimeoutFunc, 100);
   `.trim();
 
-  chrome.tabs.executeScript(tabID, { code: jsText });
+  await chrome.tabs.executeScript(tabID, { code: jsText });
 }
 
 chrome.tabs.onUpdated.addListener(function (tabID, changeInfo, tab) {
   if (changeInfo.status == 'complete') {
-    var tabURL = new URL(tab.url);
+    let tabURL = new URL(tab.url);
 
-    chrome.storage.sync.get(tabURL.host, function (data) {
-      var tabData = data[tabURL.host];
+    chrome.storage.sync.get(tabURL.host, async function (data) {
 
-      if (tabData != undefined && new RegExp(tabData['pathPattern']).test(tabURL.pathname)) {
-        executeScript(tabID, tabData['jsText'])
+      let tabData = data[tabURL.host];
+      let pathName = tabURL.pathname;
+
+      for (let pathPattern in tabData) {
+        if (RegExp(pathPattern).test(pathName)) {
+          await executeScript(tabID, tabData[pathPattern]['jsText'])
+        }
       }
     });
   }
