@@ -1,5 +1,5 @@
 
-function addOptionNode(pathPattern) {
+function addOptionNode(pathName, pathPattern) {
 
   let node = document.createElement('option');
 
@@ -9,6 +9,11 @@ function addOptionNode(pathPattern) {
 
   node.style.color = '#333';
   node.style.backgroundColor = '#fff';
+
+  if (RegExp(pathPattern).test(pathName)) {
+    node.style.fontWeight = 'bold';
+    node.style.backgroundColor = '#0f0';
+  }
 
   node.style.border = '1px solid #ccc';
   node.style.display = 'block';
@@ -43,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
       tabData = tabData[tab.host] || {};
 
       for (let pathPattern in tabData) {
-        let node = addOptionNode(pathPattern);
+        let node = addOptionNode(tab.pathname, pathPattern);
         existingPatterns.appendChild(node);
       }
 
@@ -56,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         pathPatternInput.value = this.value;
-        jsTextArea.value = tabData[this.value];
+        jsTextArea.value = tabData[this.value].jsText || '';
 
       });
 
@@ -77,8 +82,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       await chrome.storage.sync.get(tab.host, async function (data) {
-        data[tab.host] = data[tab.host] || {};
-        data[tab.host][pathPatternInput.value] = jsText;
+        data[tab.host] ??= {};
+        data[tab.host][pathPatternInput.value] ??= {};
+        data[tab.host][pathPatternInput.value]['jsText'] = jsText;
 
         await chrome.storage.sync.set(data, () => { });
       });
