@@ -11,6 +11,7 @@ function addOptionNode(pathName, pathPattern) {
   node.style.backgroundColor = '#fff';
 
   if (RegExp(pathPattern).test(pathName)) {
+    node.selected = true;
     node.style.fontWeight = 'bold';
     node.style.backgroundColor = '#0f0';
   }
@@ -49,6 +50,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       for (let pathPattern in tabData) {
         let node = addOptionNode(tab.pathname, pathPattern);
+
+        if (node.selected) {
+          pathPatternInput.value = pathPattern;
+          jsTextArea.value = tabData[pathPattern].jsText || '';
+        }
+
         existingPatterns.appendChild(node);
       }
 

@@ -30,7 +30,7 @@ async function executeScript(tabID, jsText) {
 }
 
 chrome.tabs.onUpdated.addListener(function (tabID, changeInfo, tab) {
-  if (changeInfo.status == 'complete') {
+  if (changeInfo.status === 'complete') {
     let tabURL = new URL(tab.url);
 
     chrome.storage.sync.get(tabURL.host, async function (data) {
