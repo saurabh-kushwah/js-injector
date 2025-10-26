@@ -1,17 +1,29 @@
 async function executeScript(tabID, jsText) {
   var jsText = `
     async function setTimeoutFunc() {
-      for (let i = 0; i < 5; i++) {
+
+      if (document.readyState === 'loading') {
+        console.log("document still loading, waiting for full content load");
+        await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
+      }
+
+      console.log("starting injection script...");
+
+      for (let i = 1; i <= 10; i++) {
         try {
           ${jsText}
+          break;
         } catch (error) {
           // wait for 100 millisecond before retrying
-          await new Promise((resolve, _) => setTimeout(resolve, 100));
+          console.log("fail to inject javascript: ", error);
+          await new Promise((resolve, _) => setTimeout(resolve, 100 * i));
         }
       }
     }
 
-    setTimeout(setTimeoutFunc, 100);
+    setTimeout(async () => {
+      await setTimeoutFunc();
+    }, 100);
   `.trim();
 
   await chrome.tabs.executeScript(tabID, { code: jsText });
